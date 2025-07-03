@@ -1,0 +1,62 @@
+@import url('https://fonts.cdnfonts.com/css/general-sans');
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+
+  scrollbar-width: thin;
+  scrollbar-color: #D9B346 #1e1e1e;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #181818;
+  font-family: 'General Sans', sans-serif;
+  color: white;
+}
+
+
+.diagonal-lines {
+  background-image: repeating-linear-gradient(
+    135deg,
+    #D9B346 0px,
+    #D9B346 2px,
+    transparent 2px,
+    transparent 20px
+  );
+}
+
+option {
+  background-color: #181818; /* e.g., Tailwind's bg-neutral-800 */
+  color: #facc15;
+  padding: 8px 12px; /* might not work in some browsers */
+  border: 20px;
+}
+
+
+/* Custom sleek scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1e1e1e; /* dark track */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #D9B346, #DABE57);
+  border-radius: 4px;
+  border: 2px solid #1e1e1e; /* creates padding around thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #c5a93c, #c6aa3d);
+}
+
+
+
+
