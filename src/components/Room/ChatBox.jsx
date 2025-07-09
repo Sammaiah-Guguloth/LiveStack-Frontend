@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
-import { FaVideo, FaMicrophone } from "react-icons/fa";
+import {
+  FaVideo,
+  FaMicrophone,
+  FaMicrophoneSlash,
+  FaVideoSlash,
+} from "react-icons/fa";
 import socket from "../../services/SocketClient";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { addMessage } from "../../redux/slices/chat.slice";
+import { toggleMute, toggleVideo } from "../../redux/slices/videoCall.slice";
 
 const ChatBox = () => {
   const [message, setMessage] = useState("");
@@ -13,6 +19,11 @@ const ChatBox = () => {
   // const [messages, setMessages] = useState([]);
   const { messages } = useSelector((state) => state.chat);
   const { roomId } = useParams();
+  const { localStream, isMuted, videoOff } = useSelector(
+    (state) => state.videoCall
+  );
+
+  const dispatch = useDispatch();
 
   const requestAudio = () => {
     console.log("Socket emit: requested-audio");
@@ -20,6 +31,43 @@ const ChatBox = () => {
 
   const requestVideo = () => {
     console.log("Socket emit: requested-video");
+  };
+
+  const handleToggleMute = () => {
+    const newState = !isMuted; // toggle state
+
+    // 1. Update local audio track
+    if (localStream) {
+      localStream.getAudioTracks().forEach((track) => {
+        track.enabled = !newState;
+      });
+    }
+
+    // 2. Update redux
+    dispatch(toggleMute());
+
+    // 3. Emit to others
+    socket.emit("media-toggle", {
+      isMuted: newState,
+      videoOff,
+    });
+  };
+
+  const handleToggleVideo = () => {
+    const newState = !videoOff; // toggle state
+    if (localStream) {
+      localStream.getVideoTracks().forEach((track) => {
+        track.enabled = !newState;
+      });
+    }
+
+    dispatch(toggleVideo());
+
+    socket.emit("media-toggle", {
+      roomId,
+      isMuted,
+      videoOff: newState,
+    });
   };
 
   // Auto scroll to bottom on new messages
@@ -123,21 +171,29 @@ const ChatBox = () => {
         </button>
 
         <button
-          onClick={requestAudio}
+          onClick={handleToggleMute}
           className="p-2 rounded-md hover:bg-[#2e2e2e] transition"
-          aria-label="Request audio"
-          title="Request audio"
+          aria-label={`${isMuted ? "Unmute" : "Mute"} yourself`}
+          title={`${isMuted ? "Unmute" : "Mute"} yourself`}
         >
-          <FaMicrophone className="text-[#D9B346]" />
+          {isMuted ? (
+            <FaMicrophone className="text-[#D9B346]" />
+          ) : (
+            <FaMicrophoneSlash className="text-[#D9B346]" />
+          )}
         </button>
 
         <button
-          onClick={requestVideo}
+          onClick={handleToggleVideo}
           className="p-2 rounded-md hover:bg-[#2e2e2e] transition"
-          aria-label="Request video"
-          title="Request video"
+          aria-label={`${videoOff ? "Turn on" : "Turn off"} video`}
+          title={`${videoOff ? "Turn on" : "Turn off"} video`}
         >
-          <FaVideo className="text-[#D9B346]" />
+          {videoOff ? (
+            <FaVideo className="text-[#D9B346]" />
+          ) : (
+            <FaVideoSlash className="text-[#D9B346]" />
+          )}
         </button>
 
         <button

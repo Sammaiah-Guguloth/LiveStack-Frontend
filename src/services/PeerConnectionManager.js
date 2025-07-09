@@ -40,20 +40,31 @@ class PeerConnectionManager {
       this.onRemoteStream(userId, userName, socketId, remoteStream);
     };
 
-    this.peerConnections[socketId] = { userId, socketId, peer };
+    this.peerConnections[socketId] = { userId, userName, socketId, peer };
     return peer;
   }
 
-  async createAndSendOffer({ userId, userName, socketId }) {
-    console.log("creating and sending offer to ", userId, " ", socketId);
-    const peer = this.createPeer({ userId, userName, socketId });
+  async createAndSendOffer({
+    fromUserName,
+    fromUserId,
+    toUserName,
+    toUserId,
+    socketId,
+  }) {
+    console.log("creating and sending offer to ", toUserName, " ", socketId);
+    const peer = this.createPeer({
+      userId: toUserId,
+      userName: toUserName,
+      socketId,
+    });
     const offer = await peer.createOffer();
     console.log("sending offer : ", offer);
     await peer.setLocalDescription(offer);
 
+    // we've gone wrong here
     this.socket.emit("send-offer", {
-      fromUserName: userName,
-      from: userId,
+      fromUserName,
+      from: fromUserId,
       to: socketId,
       offer,
     });

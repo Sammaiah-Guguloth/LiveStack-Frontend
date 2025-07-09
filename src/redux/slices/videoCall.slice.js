@@ -30,21 +30,28 @@ const videoCallSlice = createSlice({
     removeRemoteStream: (state, action) => {
       delete state.remoteStreams[action.payload]; // socketId
     },
+    updateRemoteMedia: (state, action) => {
+      const { socketId, isMuted, videoOff } = action.payload;
+      if (state.remoteStreams[socketId]) {
+        state.remoteStreams[socketId].isMuted = isMuted;
+        state.remoteStreams[socketId].videoOff = videoOff;
+      }
+    },
     toggleMute: (state) => {
       state.isMuted = !state.isMuted;
-      if (state.localStream) {
-        state.localStream.getAudioTracks().forEach((track) => {
-          track.enabled = !state.isMuted;
-        });
-      }
+      // if (state.localStream) {
+      //   state.localStream.getAudioTracks().forEach((track) => {
+      //     track.enabled = !state.isMuted;
+      //   });
+      // }
     },
     toggleVideo: (state) => {
       state.videoOff = !state.videoOff;
-      if (state.localStream) {
-        state.localStream.getVideoTracks().forEach((track) => {
-          track.enabled = !state.videoOff;
-        });
-      }
+      // if (state.localStream) {
+      //   state.localStream.getVideoTracks().forEach((track) => {
+      //     track.enabled = !state.videoOff;
+      //   });
+      // }
     },
     resetVideoState: () => initialState,
   },
@@ -57,6 +64,7 @@ export const {
   toggleMute,
   toggleVideo,
   resetVideoState,
+  updateRemoteMedia,
 } = videoCallSlice.actions;
 
 export default videoCallSlice.reducer;

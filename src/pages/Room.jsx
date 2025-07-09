@@ -30,6 +30,7 @@ import {
   removeRemoteStream,
   resetVideoState,
   setLocalStream,
+  updateRemoteMedia,
 } from "../redux/slices/videoCall.slice";
 import PeerConnectionManager from "../services/PeerConnectionManager";
 import { audio } from "framer-motion/client";
@@ -104,6 +105,7 @@ const Room = () => {
           }
         } else {
           stream = localStreamRef.current;
+          dispatch(setLocalStream(stream));
         }
 
         if (!peerManagerRef.current) {
@@ -133,8 +135,10 @@ const Room = () => {
           return;
         }
         peerManagerRef.current.createAndSendOffer({
-          userName: data.user.firstName,
-          userId: data.user._id,
+          fromUserName: user.firstName,
+          fromUserId: user._id,
+          toUserName: data.user.firstName,
+          toUserId: data.user._id,
           socketId: data.socketId,
         });
 
@@ -208,6 +212,10 @@ const Room = () => {
         });
       });
 
+      socket.on("media-updated", ({ socketId, isMuted, videoOff }) => {
+        dispatch(updateRemoteMedia({ socketId, isMuted, videoOff }));
+      });
+
       socket.on("user-left", (data) => {
         // remove the remote stream
 
@@ -276,6 +284,7 @@ const Room = () => {
         socket.off("receive-offer");
         socket.off("receive-answer"); // 🛠️ FIXED
         socket.off("ice-candidate"); // 🛠️ FIXED
+        socket.off("media-updated");
 
         // ✅ Disconnect socket
         dispatch(disconnectSocketThunk());
