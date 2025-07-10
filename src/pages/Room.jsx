@@ -33,7 +33,7 @@ import {
   updateRemoteMedia,
 } from "../redux/slices/videoCall.slice";
 import PeerConnectionManager from "../services/PeerConnectionManager";
-import { audio } from "framer-motion/client";
+import ResponsiveEditorLayout from "../components/Layout/ResponsiveEditorLayout";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -296,50 +296,52 @@ const Room = () => {
     return <h3>Loading...</h3>;
   }
 
-  return (
-    <div className="w-screen h-screen overflow-hidden bg-[#121212] text-white">
-      <PanelGroup direction="horizontal" className="h-full w-full">
-        {/* Left Panel: Editor */}
-        <Panel defaultSize={70} minSize={50}>
-          <div className="flex flex-col h-full w-full overflow-hidden">
-            <CodeHeader />
-            <div className="flex-1 overflow-hidden">
-              <CodeEditor />
-            </div>
-          </div>
-        </Panel>
+  return <ResponsiveEditorLayout />;
 
-        {/* Horizontal Resize Handle */}
-        <PanelResizeHandle className="w-[4px] bg-[#2e2e2e] hover:bg-yellow-400 transition-all duration-200 cursor-col-resize" />
+  // return (
+  //   <div className="w-screen h-screen overflow-hidden bg-[#121212] text-white">
+  //     <PanelGroup direction="horizontal" className="h-full w-full">
+  //       {/* Left Panel: Editor */}
+  //       <Panel defaultSize={70} minSize={50}>
+  //         <div className="flex flex-col h-full w-full overflow-hidden">
+  //           <CodeHeader />
+  //           <div className="flex-1 overflow-hidden">
+  //             <CodeEditor />
+  //           </div>
+  //         </div>
+  //       </Panel>
 
-        {/* Right Panel: Members + Chat */}
-        <Panel defaultSize={30} minSize={20}>
-          <PanelGroup direction="vertical" className="h-full w-full">
-            {/* Members List - half height */}
-            <Panel defaultSize={50} minSize={20}>
-              <div className="h-full w-full overflow-auto border-b border-[#2e2e2e]">
-                <VideoCall />
+  //       {/* Horizontal Resize Handle */}
+  //       <PanelResizeHandle className="w-[4px] bg-[#2e2e2e] hover:bg-yellow-400 transition-all duration-200 cursor-col-resize" />
 
-                {/* <MembersList /> */}
+  //       {/* Right Panel: Members + Chat */}
+  //       <Panel defaultSize={30} minSize={20}>
+  //         <PanelGroup direction="vertical" className="h-full w-full">
+  //           {/* Members List - half height */}
+  //           <Panel defaultSize={50} minSize={20}>
+  //             <div className="h-full w-full overflow-auto border-b border-[#2e2e2e]">
+  //               <VideoCall />
 
-                {/* <JitsiVideoRoom /> */}
-              </div>
-            </Panel>
+  //               {/* <MembersList /> */}
 
-            {/* Resize Handle between MembersList and ChatBox */}
-            <PanelResizeHandle className="h-[4px] bg-[#2e2e2e] hover:bg-yellow-400 transition-all duration-200 cursor-row-resize" />
+  //               {/* <JitsiVideoRoom /> */}
+  //             </div>
+  //           </Panel>
 
-            {/* Chat Box - half height */}
-            <Panel defaultSize={50} minSize={20}>
-              <div className="h-full w-full overflow-auto">
-                <ChatBox />
-              </div>
-            </Panel>
-          </PanelGroup>
-        </Panel>
-      </PanelGroup>
-    </div>
-  );
+  //           {/* Resize Handle between MembersList and ChatBox */}
+  //           <PanelResizeHandle className="h-[4px] bg-[#2e2e2e] hover:bg-yellow-400 transition-all duration-200 cursor-row-resize" />
+
+  //           {/* Chat Box - half height */}
+  //           <Panel defaultSize={50} minSize={20}>
+  //             <div className="h-full w-full overflow-auto">
+  //               <ChatBox />
+  //             </div>
+  //           </Panel>
+  //         </PanelGroup>
+  //       </Panel>
+  //     </PanelGroup>
+  //   </div>
+  // );
 };
 
 export default Room;
