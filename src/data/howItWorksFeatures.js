@@ -48,13 +48,13 @@ export const howItWorksSteps = [
       "Users can share audio/video in real-time and control mute/unmute settings individually.",
     image: "/images/how-it-works/audio-video.webp",
   },
-  // {
-  //   step: "Step 8",
-  //   title: "Leave Room Anytime",
-  //   description:
-  //     "Members can leave rooms anytime. Presence updates are reflected to other participants in real-time.",
-  //   image: "/images/how-it-works/leave-room.webp",
-  // },
+  {
+    step: "Step 8",
+    title: "Share Room Easily",
+    description:
+      "Users can share the room via WhatsApp, Gmail, Telegram, and can also copy the Room ID and Room Link to share anywhere.",
+    image: "/images/how-it-works/share-room.webp",
+  },
   {
     step: "Step 9",
     title: "Personal Dashboard",
