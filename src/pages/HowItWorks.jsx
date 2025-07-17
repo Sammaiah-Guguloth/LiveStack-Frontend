@@ -24,10 +24,22 @@ const ImageModal = ({ isOpen, onClose, imageSrc, title }) => {
           exit={{ opacity: 0 }}
           onClick={onClose}
         >
-          <motion.img
+          {/* <motion.img
             src={imageSrc}
             alt={title}
             className="max-w-4xl max-h-[90vh] rounded-xl shadow-lg"
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 100 }}
+            onClick={(e) => e.stopPropagation()}
+            draggable={false}
+          /> */}
+
+          <motion.img
+            src={imageSrc}
+            alt={title}
+            className="w-[90vw] max-w-4xl h-auto max-h-[80vh] sm:w-auto sm:max-h-[90vh] rounded-xl shadow-lg object-contain"
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
