@@ -32,6 +32,8 @@ const Navbar = () => {
 
         {/* Desktop Right Section */}
         <div className="hidden sm:flex items-center gap-4">
+          {isAuthenticated && !isAuthPage && <UserDropdown user={user} />}
+
           <Link
             to="/howItWorks"
             className="text-sm font-semibold border border-[#DABE57] px-5 py-2 rounded hover:bg-[#DABE57] hover:text-[#181818] transition"
@@ -58,20 +60,24 @@ const Navbar = () => {
               </Link>
             </>
           )}
-
-          {isAuthenticated && !isAuthPage && <UserDropdown user={user} />}
         </div>
 
         {/* Hamburger for tablet & below */}
-        <button
-          className="sm:hidden text-white focus:outline-none"
-          onClick={toggleMobileMenu}
-        >
-          {isMobileMenuOpen ? <HiX size={26} /> : <HiMenuAlt3 size={26} />}
-        </button>
+        <div className="sm:hidden flex gap-4">
+          <>{isAuthenticated && !isAuthPage && <UserDropdown user={user} />}</>
+          <button
+            className="sm:hidden text-white focus:outline-none"
+            onClick={toggleMobileMenu}
+          >
+            {isMobileMenuOpen ? <HiX size={26} /> : <HiMenuAlt3 size={26} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
+
+      {/* {isAuthenticated && !isAuthPage && <UserDropdown user={user} />} */}
+
       <AnimatePresence>
         {isMobileMenuOpen && (
           <motion.div
@@ -109,12 +115,6 @@ const Navbar = () => {
                   Signup
                 </Link>
               </>
-            )}
-
-            {isAuthenticated && !isAuthPage && (
-              <div onClick={toggleMobileMenu}>
-                <UserDropdown user={user} />
-              </div>
             )}
           </motion.div>
         )}
