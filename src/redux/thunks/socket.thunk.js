@@ -8,6 +8,7 @@ export const connectSocketThunk = createAsyncThunk(
       await socket.connect();
       return true;
     } catch (err) {
+      console.log(err);
       return rejectWithValue(err.message || "Socket connection failed.");
     }
   }

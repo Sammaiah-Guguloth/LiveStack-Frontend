@@ -4,6 +4,8 @@ import MobileLayout from "./MobileLayout";
 const ResponsiveEditorLayout = () => {
   return (
     <div className="w-screen h-screen overflow-hidden bg-[#121212] text-white">
+
+      
       {/* 💻 Desktop / Laptop layout */}
       <div className="hidden lg:block h-full w-full">
         <DesktopLayout />

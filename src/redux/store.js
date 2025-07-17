@@ -13,4 +13,8 @@ export const store = configureStore({
     code: codeReducer,
     videoCall: videoCallReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false, // disables MediaStream warning
+    }),
 });

@@ -51,14 +51,14 @@ class PeerConnectionManager {
     toUserId,
     socketId,
   }) {
-    console.log("creating and sending offer to ", toUserName, " ", socketId);
+    // console.log("creating and sending offer to ", toUserName, " ", socketId);
     const peer = this.createPeer({
       userId: toUserId,
       userName: toUserName,
       socketId,
     });
     const offer = await peer.createOffer();
-    console.log("sending offer : ", offer);
+    // console.log("sending offer : ", offer);
     await peer.setLocalDescription(offer);
 
     // we've gone wrong here
@@ -71,7 +71,7 @@ class PeerConnectionManager {
   }
 
   async handleReceivedOffer({ fromSocketId, fromUserId, userName, offer }) {
-    console.log("handling recevied offer : ", offer, " ", userName);
+    // console.log("handling recevied offer : ", offer, " ", userName);
     const peer = this.createPeer({
       userName,
       userId: fromUserId,

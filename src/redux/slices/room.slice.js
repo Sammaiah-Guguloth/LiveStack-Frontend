@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchRoomThunk, createRoomThunk } from "../thunks/room.thunk";
+import {
+  fetchRoomThunk,
+  createRoomThunk,
+  getPaginatedRoomsThunk,
+} from "../thunks/room.thunk";
 
 const initialState = {
   room: null,
@@ -7,6 +11,8 @@ const initialState = {
   members: [],
   language: "javascript",
   roomLoading: false,
+  rooms: [],
+  userTyping: "",
   errors: [],
 };
 
@@ -40,6 +46,9 @@ const roomSlice = createSlice({
       state.members = state.members.filter(
         (member) => member._id !== action.payload._id
       );
+    },
+    setUserTyping(state, action) {
+      state.userTyping = action.payload;
     },
     setroomLoading(state, action) {
       state.roomLoading = action.payload;
@@ -88,6 +97,26 @@ const roomSlice = createSlice({
       .addCase(createRoomThunk.rejected, (state, action) => {
         state.errors = action.payload || action.error.message;
         state.roomLoading = false;
+      })
+
+      .addCase(getPaginatedRoomsThunk.pending, (state) => {
+        state.roomLoading = true;
+        state.errors = null;
+      })
+      .addCase(getPaginatedRoomsThunk.fulfilled, (state, action) => {
+        const newRooms = action.payload.rooms;
+        const existingRoomIds = new Set(state.rooms.map((room) => room._id));
+
+        const filteredRooms = newRooms.filter(
+          (room) => !existingRoomIds.has(room._id)
+        );
+
+        state.rooms = [...state.rooms, ...filteredRooms];
+        state.roomLoading = false;
+      })
+      .addCase(getPaginatedRoomsThunk.rejected, (state, action) => {
+        state.errors = action.payload || action.error.message;
+        state.roomLoading = false;
       });
   },
 });
@@ -102,6 +131,7 @@ export const {
   setError,
   clearRoom,
   setLanguage,
+  setUserTyping,
 } = roomSlice.actions;
 
 export default roomSlice.reducer;

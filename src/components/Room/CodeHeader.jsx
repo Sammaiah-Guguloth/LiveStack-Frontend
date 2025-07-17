@@ -3,9 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaDoorOpen } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
-import { MdAdminPanelSettings } from "react-icons/md";
+import { MdAdminPanelSettings, MdOutlineStickyNote2 } from "react-icons/md";
 import { setLanguage } from "../../redux/slices/room.slice";
 import socket from "../../services/SocketClient";
+import NotesWindow from "./NotesWindow";
 
 const LANGUAGES = [
   "java",
@@ -28,6 +29,9 @@ const CodeHeader = () => {
   const [roomDropdown, setRoomDropdown] = useState(false);
   const [adminDropdown, setAdminDropdown] = useState(false);
   const [langDropdown, setLangDropdown] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
+
+  const toggleNotesWindow = () => setShowNotes((prev) => !prev);
 
   const isAdmin = admin?._id === user?._id;
 
@@ -122,6 +126,19 @@ const CodeHeader = () => {
         </AnimatePresence>
       </div>
 
+      {/* Notes Button */}
+      <div
+        className="relative flex items-center gap-2 cursor-pointer"
+        onClick={toggleNotesWindow}
+        title="Take Markdown Notes (Saved per Room)"
+      >
+        <MdOutlineStickyNote2
+          size={20}
+          className="text-green-300 hover:scale-105 transition"
+        />
+        <p className="text-sm text-white hidden md:block">Notes</p>
+      </div>
+
       {/* Admin Info */}
       <div
         className="relative flex items-center gap-2 cursor-pointer"
@@ -148,6 +165,8 @@ const CodeHeader = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {showNotes && <NotesWindow onClose={toggleNotesWindow} />}
     </div>
   );
 };

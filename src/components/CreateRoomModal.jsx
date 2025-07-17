@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { createRoomThunk } from "../redux/thunks/room.thunk";
+import { SlNote } from "react-icons/sl";
 
 const supportedLanguages = [
   { label: "JavaScript", value: "javascript" },
@@ -120,8 +121,9 @@ const CreateRoomModal = ({ isOpen, onClose }) => {
             transition={{ type: "spring", stiffness: 300, damping: 25 }}
             className="bg-neutral-900 text-white w-full max-w-md mx-4 rounded-2xl shadow-xl p-6 relative"
           >
-            <h2 className="text-3xl font-bold text-yellow-400 mb-4">
-              🚀 Create a Room
+            <h2 className=" font-bold flex gap-3 items-center text-yellow-500 mb-4">
+              <SlNote className="text-2xl" />{" "}
+              <spane className="text-3xl">Create a Room</spane>
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-5">

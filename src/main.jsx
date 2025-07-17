@@ -14,7 +14,7 @@ createRoot(document.getElementById("root")).render(
       <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
         <App />
       </GoogleOAuthProvider>
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false}  />
     </BrowserRouter>
   </Provider>
 );

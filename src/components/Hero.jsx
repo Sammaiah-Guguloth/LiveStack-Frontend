@@ -6,6 +6,20 @@ import CreateRoomModal from "./CreateRoomModal";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchRoomThunk } from "../redux/thunks/room.thunk";
 import toast from "react-hot-toast";
+import { motion } from "framer-motion";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  visible: (i = 1) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.2,
+      duration: 0.6,
+      ease: "easeOut",
+    },
+  }),
+};
 
 const Hero = () => {
   const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
@@ -36,27 +50,47 @@ const Hero = () => {
   };
 
   return (
-    <section className="mt-1.5 w-full py-10 px-5 md:px-10 lg:px-20 bg-[#0f0f0f] text-white">
+    <section className="mt-1.5 w-full py-10 px-5 md:px-10 lg:px-20 bg-[#0f0f0f] text-white overflow-hidden">
       {/* Headings */}
-      <div className="text-center mb-12">
+      <motion.div
+        className="text-center mb-12"
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        custom={0}
+      >
         <h1 className="text-4xl md:text-6xl font-bold leading-tight">
           <HighlightedYellowText>LiveStack</HighlightedYellowText> —
           Collaborative Code
         </h1>
-        <h2 className="text-2xl md:text-4xl mt-4 font-semibold">
+        <motion.h2
+          className="text-2xl md:text-4xl mt-4 font-semibold"
+          variants={fadeUp}
+          custom={1}
+        >
           Editor Platform
-        </h2>
-        <p className="mt-6 max-w-2xl mx-auto text-gray-400">
+        </motion.h2>
+        <motion.p
+          className="mt-6 max-w-2xl mx-auto text-gray-400"
+          variants={fadeUp}
+          custom={2}
+        >
           Join live coding sessions, edit in sync, and ship ideas together —
           faster.
-        </p>
-        <div className="mt-4">
+        </motion.p>
+        <motion.div className="mt-4" variants={fadeUp} custom={3}>
           <TypeText />
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       {/* Buttons */}
-      <div className="flex flex-col md:flex-row justify-center items-center gap-6 mt-8">
+      <motion.div
+        className="flex flex-col md:flex-row justify-center items-center gap-6 mt-8"
+        initial="hidden"
+        animate="visible"
+        variants={fadeUp}
+        custom={4}
+      >
         <div>
           <button
             onClick={() => {
@@ -89,15 +123,18 @@ const Hero = () => {
         >
           Join Room
         </button>
-      </div>
+      </motion.div>
 
       {/* Join Room Input */}
-      <div
+      <motion.div
         className={`flex flex-col md:flex-row justify-center items-center gap-4 mt-4 transition-all duration-300 ease-in-out ${
           showJoinInput
             ? "opacity-100 max-h-[200px]"
             : "opacity-0 max-h-0 overflow-hidden"
         }`}
+        initial={{ opacity: 0, y: 20 }}
+        animate={showJoinInput ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.4 }}
       >
         <input
           type="text"
@@ -118,27 +155,27 @@ const Hero = () => {
         >
           {roomLoading ? "Loading..." : "Go"}
         </button>
-      </div>
+      </motion.div>
 
       {/* Preview */}
-      <div className="mt-10 flex justify-center">
+      <motion.div
+        className="mt-10 flex justify-center"
+        initial={{ opacity: 0, scale: 0.9 }}
+        whileInView={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        viewport={{ once: true }}
+      >
         <div className="relative w-full max-w-4xl aspect-video rounded-xl overflow-hidden shadow-lg border-2 border-[#DABE57] bg-gradient-to-br from-[#181818] to-[#2e2e2e]">
-          {/* <img
-            src="/images/code-editor-preview.png"
-            alt="editor preview"
-            className="w-full h-full object-cover opacity-90"
-          /> */}
-
           <video
-            src="/videos/hacker_room.mp4"
+            src="/videos/hacker_room _video.mp4"
             autoPlay
             loop
             muted
-            playsinline
             preload="auto"
-          ></video>
+            className="w-full h-full object-cover"
+          />
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -8,6 +8,7 @@ import {
   setLanguage,
   setMembers,
   setRoom,
+  setUserTyping,
 } from "../redux/slices/room.slice";
 import CodeHeader from "../components/Room/CodeHeader";
 import CodeEditor from "../components/Room/CodeEditor";
@@ -34,6 +35,9 @@ import {
 } from "../redux/slices/videoCall.slice";
 import PeerConnectionManager from "../services/PeerConnectionManager";
 import ResponsiveEditorLayout from "../components/Layout/ResponsiveEditorLayout";
+import axiosInstance from "../api/axios/axiosInstance";
+import { UPDATE_CODE } from "../api/apis";
+import Spinner from "../components/Spinner";
 
 const Room = () => {
   const { roomId } = useParams();
@@ -85,7 +89,7 @@ const Room = () => {
       socket.on("user-joined", async (data) => {
         dispatch(setMembers(data.updatedMembers));
 
-        console.log("came");
+        // console.log("came");
 
         // I think we should get the local stream and call peerconnections manager
 
@@ -127,7 +131,7 @@ const Room = () => {
           });
         }
 
-        console.log("peer conn manager : ", peerManagerRef.current);
+        // console.log("peer conn manager : ", peerManagerRef.current);
 
         // and create and send offer
 
@@ -149,7 +153,7 @@ const Room = () => {
       socket.on("receive-offer", async (data) => {
         const { fromSocketId, fromUserId, fromUserName, offer } = data;
 
-        console.log("offer recived : ", data);
+        // console.log("offer recived : ", data);
 
         let stream = localStreamRef.current;
         if (!localStreamRef.current) {
@@ -185,7 +189,7 @@ const Room = () => {
           });
         }
 
-        console.log("from User name : ", fromUserName);
+        // console.log("from User name : ", fromUserName);
 
         // it will set and send the answer and offer
         peerManagerRef.current.handleReceivedOffer({
@@ -222,13 +226,13 @@ const Room = () => {
         if (data.user._id != user._id)
           dispatch(removeRemoteStream(data.socketId));
 
-        console.log("came for user left");
+        // console.log("came for user left");
         dispatch(setMembers(data.updatedMembers));
         toast.error(`${data.user.firstName} left the room!`);
       });
 
       socket.on("message", (data) => {
-        console.log("received : ", data);
+        // console.log("received : ", data);
         // setMessages((prev) => [...prev, data]);
         dispatch(addMessage(data));
       });
@@ -238,6 +242,11 @@ const Room = () => {
           dispatch(setCode(newCode));
         }
       });
+
+      // socket.on("user-typing", ({ userName }) => {
+      //   console.log(userName, " typing came");
+      //   dispatch(setUserTyping(userName));
+      // });
 
       socket.on("cursor-change", ({ userId, userName, position }) => {
         if (userId !== user._id) {
@@ -250,11 +259,11 @@ const Room = () => {
       });
 
       return () => {
-        console.log("cleaning ...");
+        // console.log("cleaning ...");
 
         // ✅ Stop local media stream
         if (localStreamRef.current) {
-          console.log("stopping local stream");
+          // console.log("stopping local stream");
           localStreamRef.current.getTracks().forEach((track) => {
             track.stop();
           });
@@ -273,6 +282,9 @@ const Room = () => {
         // ✅ Reset Redux state
         dispatch(resetVideoState());
 
+        // making a call to save the code
+        axiosInstance.put(UPDATE_CODE, { roomId, code });
+
         // ✅ Remove ALL socket listeners properly
         socket.off("user-joined");
         socket.off("join-room");
@@ -285,6 +297,7 @@ const Room = () => {
         socket.off("receive-answer"); // 🛠️ FIXED
         socket.off("ice-candidate"); // 🛠️ FIXED
         socket.off("media-updated");
+        // socket.on("user-typing");
 
         // ✅ Disconnect socket
         dispatch(disconnectSocketThunk());
@@ -293,7 +306,7 @@ const Room = () => {
   }, [loading, user]);
 
   if (loading) {
-    return <h3>Loading...</h3>;
+    return <Spinner />;
   }
 
   return <ResponsiveEditorLayout />;

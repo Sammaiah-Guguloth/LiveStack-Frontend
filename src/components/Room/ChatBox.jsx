@@ -187,6 +187,8 @@ import InputBar from "./InputBar";
 import MediaControls from "./MediaControls";
 import useAutoScroll from "./hooks/useAutoScroll";
 import { MdCallEnd } from "react-icons/md";
+import axiosInstance from "../../api/axios/axiosInstance";
+import { UPDATE_CODE } from "../../api/apis";
 
 const ChatBox = () => {
   const [message, setMessage] = useState("");
@@ -195,6 +197,7 @@ const ChatBox = () => {
 
   const { user } = useSelector((state) => state.auth);
   const { messages } = useSelector((state) => state.chat);
+  const { code } = useSelector((state) => state.code);
   const { roomId } = useParams();
   const { localStream, isMuted, videoOff } = useSelector(
     (state) => state.videoCall
@@ -224,8 +227,18 @@ const ChatBox = () => {
     socket.emit("media-toggle", { roomId, isMuted, videoOff: newState });
   };
 
-  const leaveRoomSocketHandler = () => {
+  const leaveRoomSocketHandler = async () => {
+    // should make a network call of saving the code
+    try {
+      const response = await axiosInstance.put(UPDATE_CODE, { roomId, code });
+      // console.log(response);
+    } catch (error) {
+      console.log(error);
+      error.response?.data?.errors?.map((er) => toast.error(er.msg));
+    }
+
     socket.emit("leave-room", { user, roomId });
+
     navigate("/");
   };
 

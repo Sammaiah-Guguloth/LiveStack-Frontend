@@ -9,6 +9,7 @@ import {
   updateRemoteCursor,
   clearRemoteCursors,
 } from "../../redux/slices/code.slice";
+import UserTyping from "./UserTyping";
 
 // Boilerplate per language
 const boilerplateMap = {
@@ -86,7 +87,8 @@ const generateCursorStyles = (remoteCursors, currentUserId) => {
 
 const CodeEditor = () => {
   const { user } = useSelector((state) => state.auth);
-  const { language } = useSelector((state) => state.room);
+  const { language, userTyping } = useSelector((state) => state.room);
+  // console.log("user tuping in code editor : ", userTyping);
   const { code, remoteCursors } = useSelector((state) => state.code);
   const dispatch = useDispatch();
   const { roomId } = useParams();
@@ -103,6 +105,10 @@ const CodeEditor = () => {
   const handleCodeChange = (value) => {
     dispatch(setCode(value));
     socket.emit("code-change", { code: value, roomId, userId: user._id });
+    // socket.emit("user-typing", {
+    //   roomId,
+    //   userName: user.firstName + " " + user.lastName,
+    // });
   };
 
   // Setup cursor tracking
@@ -213,6 +219,12 @@ const CodeEditor = () => {
           suggestOnTriggerCharacters: true,
         }}
       />
+
+      {/* {userTyping && (
+        <div>
+          <UserTyping userName={userTyping} />{" "}
+        </div>
+      )} */}
 
       <style>{`
         ${dynamicCursorStyles}
